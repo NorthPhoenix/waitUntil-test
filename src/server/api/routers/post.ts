@@ -1,40 +1,23 @@
-import { z } from "zod";
-
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
-// Mocked DB
-interface Post {
-  id: number;
-  name: string;
-}
-const posts: Post[] = [
-  {
-    id: 1,
-    name: "Hello World",
-  },
-];
+import { waitUntil } from "@vercel/functions";
+
 
 export const postRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `Hello ${input.text}`,
-      };
-    }),
-
-  create: publicProcedure
-    .input(z.object({ name: z.string().min(1) }))
-    .mutation(async ({ input }) => {
-      const post: Post = {
-        id: posts.length + 1,
-        name: input.name,
-      };
-      posts.push(post);
-      return post;
-    }),
-
-  getLatest: publicProcedure.query(() => {
-    return posts.at(-1) ?? null;
-  }),
+  testWaitUntil: publicProcedure
+    .mutation(async () => {
+      const testarr = []
+      console.log('waitUntilTest 1')
+      testarr.push(1)
+      waitUntil(new Promise(resolve => {
+        console.log('waitUntilTest 2')
+        testarr.push(2)
+        setTimeout(resolve, 3000)
+        console.log('waitUntilTest 4')
+        testarr.push(4)
+      }))
+      console.log('waitUntilTest 3')
+      testarr.push(3)
+      return testarr
+    })
 });
