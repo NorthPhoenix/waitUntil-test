@@ -12,12 +12,14 @@ export const postRouter = createTRPCRouter({
       waitUntil(new Promise(resolve => {
         console.log('waitUntilTest 2')
         testarr.push(2)
-        setTimeout(resolve, 3000)
-        console.log('waitUntilTest 4')
-        testarr.push(4)
+        setTimeout(() => {
+          console.log('waitUntilTest 4')
+          testarr.push(4)
+          resolve(undefined)
+        }, 3000)
       }))
       console.log('waitUntilTest 3')
       testarr.push(3)
-      return testarr
-    })
+      return testarr;
+    }),
 });
